@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"name": "Root",
+			"path": "."
+		},
+		{
+			"name": "Playground",
+			"path": "./apps/playground"
+		},
+		{
+			"name": "Combobox",
+			"path": "./packages/combobox"
+		}
+	],
+	"settings": {
+		"typescript.tsdk": "Playground/node_modules/typescript/lib"
+	}
+}
