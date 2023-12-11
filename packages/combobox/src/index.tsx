@@ -9,6 +9,7 @@ import {
 	PopoverRoot,
 	PopoverTrigger,
 	PropsWithoutRefOrColor,
+	ScrollArea,
 	Separator,
 	Text,
 	TextField,
@@ -24,6 +25,7 @@ import {
 } from "@radix-ui/themes";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import { ChevronDownIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import classNames from "classnames";
 import { comboboxRootPropDefs } from "./index.props";
@@ -144,7 +146,7 @@ const ComboboxInput = forwardRef<
 		...inputProps
 	} = marginRest;
 	return (
-		<div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+		<div className={"rt-ComboboxInput"} cmdk-input-wrapper="" {...marginProps}>
 			<TextField.Root>
 				<TextField.Slot>
 					<MagnifyingGlassIcon className="mr-2 h-4 w-4 shrink-0 opacity-50" />
@@ -172,9 +174,14 @@ const ComboboxList = forwardRef<
 	React.ElementRef<typeof CommandPrimitive.List>,
 	React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
 >(({ className, ...props }, ref) => (
-	<Box asChild width="100%">
-		<CommandPrimitive.List ref={ref} className={classNames(className)} {...props} />
-	</Box>
+	<ScrollAreaPrimitive.Root type="auto" className="rt-ScrollAreaRoot">
+		<ScrollAreaPrimitive.Viewport className="rt-ScrollAreaViewport" style={{ overflowY: undefined }}>
+			<CommandPrimitive.List ref={ref} className={classNames(className)} {...props} />
+		</ScrollAreaPrimitive.Viewport>
+		<ScrollAreaPrimitive.Scrollbar className="rt-ScrollAreaScrollbar rt-r-size-1" orientation="vertical">
+			<ScrollAreaPrimitive.Thumb className="rt-ScrollAreaThumb" />
+		</ScrollAreaPrimitive.Scrollbar>
+	</ScrollAreaPrimitive.Root>
 ));
 ComboboxList.displayName = CommandPrimitive.List.displayName;
 
