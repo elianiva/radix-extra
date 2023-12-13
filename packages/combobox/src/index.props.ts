@@ -8,13 +8,13 @@ const comboboxRootPropDefs = {
 	variant: { type: "enum", values: variants, default: "surface" },
 	color: colorProp,
 	radius: radiusProp,
-	value: { type: "string", default: "Select Something..." },
+	value: { type: "string" },
 } satisfies {
 	size: PropDef<(typeof sizes)[number]>;
 	variant: PropDef<(typeof variants)[number]>;
 	color: typeof colorProp;
 	radius: typeof radiusProp;
-	value: PropDef<string>;
+	value: PropDef<string|undefined>;
 };
 
 export { comboboxRootPropDefs };

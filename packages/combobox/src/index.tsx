@@ -41,7 +41,7 @@ const ComboboxRoot = (props: PropsWithChildren<ComboboxRootOwnProps>) => {
 	const {
 		children,
 		size = selectRootPropDefs.size.default,
-		value = comboboxRootPropDefs.value.default,
+		value,
 		onSelect,
 		...rootProps
 	} = props;
