@@ -26,11 +26,13 @@ import {
 import * as SelectPrimitive from "@radix-ui/react-select";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
-import { ChevronDownIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { CheckIcon, ChevronDownIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import classNames from "classnames";
 import { comboboxRootPropDefs } from "./index.props";
 
-type ComboboxRootOwnProps = GetPropDefTypes<typeof comboboxRootPropDefs>;
+type ComboboxRootOwnProps = GetPropDefTypes<typeof comboboxRootPropDefs> & {
+	onSelect?: (value: string) => void;
+};
 
 type ComboboxContextValue = ComboboxRootOwnProps;
 const ComboboxContext = React.createContext<ComboboxContextValue>({});
@@ -40,10 +42,11 @@ const ComboboxRoot = (props: PropsWithChildren<ComboboxRootOwnProps>) => {
 		children,
 		size = selectRootPropDefs.size.default,
 		value = comboboxRootPropDefs.value.default,
+		onSelect,
 		...rootProps
 	} = props;
 	return (
-		<ComboboxContext.Provider value={React.useMemo(() => ({ size, value }), [size, value])}>
+		<ComboboxContext.Provider value={React.useMemo(() => ({ size, value, onSelect }), [size, value, onSelect])}>
 			<PopoverRoot {...rootProps}>{children}</PopoverRoot>
 		</ComboboxContext.Provider>
 	);
@@ -122,7 +125,7 @@ const ComboboxTrigger = forwardRef<ComboboxTriggerElement, ComboboxTriggerProps>
 				)}
 			>
 				<span className="rt-ComboboxTriggerInner">
-					<Text>{value}</Text>
+					<Text>{value ?? placeholder}</Text>
 				</span>
 				<ChevronDownIcon className="rt-ComboboxIcon" />
 			</button>
@@ -146,7 +149,7 @@ const ComboboxInput = forwardRef<
 		...inputProps
 	} = marginRest;
 	return (
-		<div className={"rt-ComboboxInput"} cmdk-input-wrapper="" {...marginProps}>
+		<div className="rt-ComboboxInput" cmdk-input-wrapper="" {...marginProps}>
 			<TextField.Root>
 				<TextField.Slot>
 					<MagnifyingGlassIcon className="mr-2 h-4 w-4 shrink-0 opacity-50" />
@@ -216,7 +219,22 @@ const ComboboxItem = forwardRef<
 	React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>
 >((props, ref) => {
 	const { className, ...itemProps } = props;
-	return <CommandPrimitive.Item ref={ref} className={classNames("rt-ComboboxItem", className)} {...itemProps} />;
+	const { value, onSelect } = React.useContext(ComboboxContext);
+	return (
+		<CommandPrimitive.Item
+			ref={ref}
+			className={classNames("rt-ComboboxItem", className)}
+			onSelect={onSelect}
+			{...itemProps}
+		>
+			<CheckIcon
+				style={{
+					opacity: value === itemProps.value ? 1 : 0,
+				}}
+			/>
+			{props.children}
+		</CommandPrimitive.Item>
+	);
 });
 ComboboxItem.displayName = CommandPrimitive.Item.displayName;
 

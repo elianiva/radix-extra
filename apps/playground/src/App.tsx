@@ -9,16 +9,21 @@ import {
 	ComboboxRoot,
 	ComboboxTrigger,
 } from "@radix-extra/combobox";
-import { CheckIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 
 function App() {
-	const [value, setValue] = useState<string>("Choose something...");
+	const [value, setValue] = useState<string>();
 
 	return (
 		<Flex height="100%" align="center" direction="column">
-			<ComboboxRoot value={value} variant="soft">
-				<ComboboxTrigger />
+			<ComboboxRoot
+				value={value}
+				variant="soft"
+				onSelect={(currentValue) => {
+					setValue(currentValue === value ? "Choose something..." : currentValue);
+				}}
+			>
+				<ComboboxTrigger placeholder="Choose Something..." />
 				<ComboboxContent>
 					<ComboboxInput placeholder="Search framework..." />
 					<ComboboxList style={{ height: "200px" }}>
@@ -31,18 +36,7 @@ function App() {
 									label: `Framework ${i}`,
 								}))
 								.map((framework) => (
-									<ComboboxItem
-										key={framework.value}
-										value={framework.value}
-										onSelect={(currentValue) => {
-											setValue(currentValue === value ? "Choose something..." : currentValue);
-										}}
-									>
-										<CheckIcon
-											style={{
-												opacity: value === framework.value ? 1 : 0,
-											}}
-										/>
+									<ComboboxItem key={framework.value} value={framework.value}>
 										{framework.label}
 									</ComboboxItem>
 								))}
